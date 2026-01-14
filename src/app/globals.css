@@ -1,0 +1,179 @@
+:root {
+  /* Theme: "Monochrome Minimalist" - Reverted */
+  --bg-color: #fdfcfc;
+  --text-main: #121212;
+  --text-muted: #555555;
+  --text-lighter: #888888;
+
+  --accent-color: #000000;
+  /* Revert to Black/Dark Grey */
+  --accent-glow: rgba(0, 0, 0, 0.1);
+
+  --surface-color: #ffffff;
+  --border-color: #e5e5e5;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+
+  --font-inter: 'Inter', sans-serif;
+  --font-space: 'Space Grotesk', sans-serif;
+
+  --container-width: 1000px;
+  --ease-spring: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--text-main);
+  color: white;
+}
+
+html {
+  font-family: var(--font-inter);
+  line-height: 1.6;
+  color: var(--text-main);
+  background-color: var(--bg-color);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Typography Overhaul */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-space);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-main);
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  font-size: 4rem;
+  margin-bottom: 0.5em;
+  /* Removed Gradient for Resume Page Compatibility */
+  color: var(--text-main);
+}
+
+h2 {
+  font-size: 2.25rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 65ch;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+/* Noise Texture */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Utility Classes */
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section {
+  padding: 8rem 0;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  background-color: var(--text-main);
+  color: white;
+  border-radius: 99px;
+  /* Revert to pill as requested originally? Or keep 12px? User liked Jason Beh which is rounded. Let's do 12px for consistency but clean. */
+  border-radius: 30px;
+  font-weight: 500;
+  font-family: var(--font-space);
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.8;
+}
+
+/* Tags */
+.tag {
+  display: inline-flex;
+  padding: 0.3em 0.8em;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  /* Keep sharp */
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+  font-family: var(--font-mono);
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  border-color: var(--text-main);
+  color: var(--text-main);
+}
+
+/* Social Icons */
+.social-icon {
+  color: var(--text-muted);
+  transition: transform 0.2s, color 0.2s;
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+
+.social-icon:hover {
+  color: var(--text-main);
+  transform: translateY(-3px);
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+}
