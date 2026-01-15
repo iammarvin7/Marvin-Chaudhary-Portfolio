@@ -162,7 +162,65 @@ a {
   color: var(--text-main);
 }
 
-/* Social Icons */
+/* Master Redesign Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.card-master {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+  /* More rounded */
+  padding: 2.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-master::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1px;
+  /* Border width */
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card-master:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.03);
+  /* Subtle outline reinforce */
+}
+
+/* Hide preview on small screens, show on md and up */
+.project-preview-container {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .project-preview-container {
+    display: flex !important;
+  }
+}
+
 .social-icon {
   color: var(--text-muted);
   transition: transform 0.2s, color 0.2s;
@@ -177,3 +235,235 @@ a {
   background-color: var(--surface-color);
   border-color: var(--border-color);
 }
+
+/* Navbar Fix (Tailwind classes were not working) */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  /* High z-index to stay on top */
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+}
+
+
+/* ==========================================================================
+   Cursor Follow Animation (Antigravity)
+   ========================================================================== */
+
+/* Draw a particles bubble in the background of the welcome screen */
+/* I am using Houdini PaintWorklets for this */
+@supports (background: paint(something)) {
+  #welcome {
+    /* Bubble Configuration */
+    --bubble-radius: 350;
+    /* Base radius of the bubble field */
+    --bubble-color: #000000;
+    /* Particles color */
+
+    /* Variables driven by JS */
+    --bubble-x: 50;
+    --bubble-y: 50;
+    --bubble-tick: 0;
+
+    background-image: paint(bubble-particles);
+
+    /* Ensure it has size */
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    /* Smooth transition for the bubble position to create "lag" */
+    /* User requested "follow after 1 second" - increasing duration and adding damping */
+    transition: --bubble-x 2.5s cubic-bezier(0.1, 0.9, 0.2, 1),
+      --bubble-y 2.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+    /* Note: Transition works if browser supports animating custom properties registered via @property */
+  }
+
+  @keyframes water-flow {
+    0% {
+      --bubble-radius: 315;
+      /* 0.9x of 350 */
+    }
+
+    50% {
+      --bubble-radius: 525;
+      /* 1.5x of 350 */
+    }
+
+    100% {
+      --bubble-radius: 315;
+    }
+  }
+
+  /* Animate tick for continuous particle movement/breathing */
+  @keyframes particle-tick {
+    0% {
+      --bubble-tick: 0;
+    }
+
+    100% {
+      --bubble-tick: 1000;
+    }
+  }
+
+  /* Register properties for animation/transition support */
+  @property --bubble-x {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 50;
+  }
+
+  @property --bubble-y {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 50;
+  }
+
+  @property --bubble-radius {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 350;
+  }
+
+  @property --bubble-tick {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  #welcome {
+    /* Existing transition for position lag */
+    transition: --bubble-x 2.5s cubic-bezier(0.1, 0.9, 0.2, 1),
+      --bubble-y 2.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+
+    /* Add water flow and tick animations */
+    animation: water-flow 8s ease-in-out infinite,
+      particle-tick 10s linear infinite;
+  }
+}
+
+/* Welcome Section Styles from users code */
+#welcome h1 {
+  display: flex;
+  justify-content: center;
+}
+
+#welcome h1 svg {
+  height: 1em;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+#welcome p {
+  font-size: 4.5em;
+  text-align: center;
+  font-weight: 500;
+
+  color: var(--text-main);
+
+  span {
+    display: block;
+    font-size: 0.7em;
+    color: var(--text-muted);
+  }
+}
+
+#welcome .cta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  justify-content: center;
+
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+
+#welcome .cta button {
+  font-size: 1.15em;
+  padding: 0.6em 1.5em;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--text-main);
+  color: var(--bg-color);
+}
+
+#welcome .cta button.secondary {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+#welcome.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* About Page Layout */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: start;
+  }
+}
+
+.about-photos-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  /* Aspect ratio to reserve space for the overlaps */
+  aspect-ratio: 3/4;
+}
+
+.photo-main {
+  width: 80%;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.photo-overlay {
+  width: 60%;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  position: absolute;
+  bottom: 5%; /* Slight push up */
+  left: 0;
+  z-index: 2;
+  border: 4px solid #fcfcfc; /* Fallback or var */
+  /* If var(--bg-color) works, use it, but safe to assume whitish bg */
+  border-color: var(--bg-color, #ffffff);
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.about-photos-container:hover .photo-main {
+  transform: scale(1.02) translateX(5px);
+}
+.about-photos-container:hover .photo-overlay {
+  transform: scale(1.02) translateX(-5px);
+}
+

@@ -18,44 +18,47 @@ export default function Navigation() {
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6">
-            <div
-                className="nav-glass-container"
+            <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="glass-panel"
                 style={{
-                    background: 'rgba(255, 255, 255, 0.7)',
-                    backdropFilter: 'blur(12px)',
-                    padding: '0.4rem',
-                    borderRadius: '99px', // Reverting to pill 99px for container or 20px? User said "page selector should be darker". 
-                    // Let's stick to the pill shape they liked but focus on the active tab color.
-                    borderRadius: '30px',
-                    border: '1px solid rgba(0,0,0,0.05)',
+                    padding: '0.5rem 0.6rem',
+                    borderRadius: '999px',
                     display: 'flex',
-                    alignItems: 'center', // Align items
-                    gap: '0.5rem',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    background: 'rgba(255, 255, 255, 1)', // Completely opaque
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.08)', // Keep shadow for depth
                 }}
                 onMouseLeave={() => setHoveredPath(pathname)}
             >
-                {/* Branding: Marvin Chaudhary */}
+                {/* Branding */}
                 <Link
                     href="/"
-                    className="nav-item"
+                    className="nav-item-brand"
                     style={{
-                        padding: '0.6rem 1.2rem',
+                        padding: '0.5rem 1.2rem',
                         fontWeight: 700,
-                        fontSize: '1rem',
+                        fontSize: '0.95rem',
                         fontFamily: 'var(--font-space)',
                         whiteSpace: 'nowrap',
-                        marginRight: '0.5rem'
+                        marginRight: '0.2rem',
+                        color: 'var(--text-main)',
+                        letterSpacing: '-0.02em',
+                        position: 'relative',
+                        zIndex: 2,
                     }}
                 >
                     Marvin Chaudhary
                 </Link>
 
-                <div style={{ width: '1px', height: '24px', background: 'rgba(0,0,0,0.1)', marginRight: '0.5rem' }} />
+                <div style={{ width: '1px', height: '16px', background: 'rgba(0,0,0,0.08)', margin: '0 0.2rem' }} />
 
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
-                    // const isHovered = hoveredPath === item.href;
+                    const isHovered = hoveredPath === item.href;
 
                     return (
                         <Link
@@ -64,14 +67,31 @@ export default function Navigation() {
                             onMouseOver={() => setHoveredPath(item.href)}
                             style={{
                                 position: 'relative',
-                                padding: '0.6rem 1.2rem',
+                                padding: '0.5rem 1rem',
                                 fontSize: '0.9rem',
                                 fontWeight: 500,
-                                color: isActive ? 'white' : 'var(--text-muted)', // White text on black pill
+                                color: isActive ? 'white' : 'var(--text-muted)',
                                 transition: 'color 0.2s',
-                                zIndex: 1
+                                zIndex: 1,
+                                letterSpacing: '-0.01em',
                             }}
                         >
+                            {/* Hover Pill (Light Grey) */}
+                            {hoveredPath === item.href && !isActive && (
+                                <motion.div
+                                    layoutId="nav-hover"
+                                    transition={{ type: "spring", bounce: 0.2, duration: 0.3 }}
+                                    style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'rgba(0,0,0,0.03)',
+                                        borderRadius: '999px',
+                                        zIndex: -1,
+                                    }}
+                                />
+                            )}
+
+                            {/* Active Pill (Black) */}
                             {isActive && (
                                 <motion.div
                                     layoutId="nav-bg"
@@ -79,10 +99,10 @@ export default function Navigation() {
                                     style={{
                                         position: 'absolute',
                                         inset: 0,
-                                        background: '#000000', // Black active pill
-                                        borderRadius: '30px',
+                                        background: 'var(--text-main)',
+                                        borderRadius: '999px',
                                         zIndex: -1,
-                                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                                     }}
                                 />
                             )}
@@ -90,7 +110,7 @@ export default function Navigation() {
                         </Link>
                     );
                 })}
-            </div>
+            </motion.div>
         </nav>
     );
 }
