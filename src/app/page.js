@@ -20,13 +20,13 @@ export default function Home() {
               }
             }
             .social-img {
-              width: 45px; /* 0.9x of 50px */
+              width: 45px;
               height: 45px;
               transition: transform 0.2s ease;
-              opacity: 1 !important; /* Active by default */
+              opacity: 1 !important;
               object-fit: contain;
               display: block;
-              margin-bottom: 0.5rem; /* Space between icon and text */
+              margin-bottom: 0.5rem;
             }
             .social-img:hover {
               transform: scale(1.1);
@@ -37,30 +37,67 @@ export default function Home() {
                 align-items: center;
                 text-decoration: none;
                 transition: transform 0.2s ease;
+                min-width: 60px;
             }
             .social-link:hover {
-                transform: scale(1.05); /* Gentle hover effect for the whole block */
+                transform: scale(1.05);
             }
             .social-label {
                 font-size: 0.9rem;
                 color: var(--text-muted);
                 font-weight: 500;
+                text-align: center;
+            }
+            /* Mobile social label adjustments */
+            @media (max-width: 480px) {
+                .social-img {
+                    width: 36px;
+                    height: 36px;
+                }
+                .social-label {
+                    font-size: 0.75rem;
+                }
+                .social-links-container {
+                    gap: 1rem !important;
+                }
+            }
+            @media (max-width: 768px) {
+                .social-links-container {
+                    gap: 1.5rem !important;
+                }
             }
             .photo-bubble {
-              width: 405px; /* 0.9x of 450px */
+              width: 405px;
               height: 405px;
               border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
               overflow: hidden;
               border: 3px solid rgba(0,0,0,0.1);
               box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-              margin-top: 2.4rem; /* 1.2x of 2rem */
-              transform: translateX(-20px); /* Shift left a bit */
+              margin-top: 2.4rem;
+              transform: translateX(-20px);
             }
             @media (max-width: 768px) {
                 .photo-bubble {
-                    width: 300px; /* Keep smaller on mobile */
-                    height: 300px;
-                    transform: translateX(0); /* Reset shift on mobile */
+                    width: 280px;
+                    height: 280px;
+                    transform: translateX(0);
+                    margin-top: 1rem;
+                }
+            }
+            @media (max-width: 480px) {
+                .photo-bubble {
+                    width: 220px;
+                    height: 220px;
+                }
+            }
+            /* Hero text responsive */
+            .hero-title {
+                white-space: normal !important;
+                word-wrap: break-word;
+            }
+            @media (min-width: 768px) {
+                .hero-title {
+                    white-space: nowrap !important;
                 }
             }
           `}</style>
@@ -106,12 +143,12 @@ export default function Home() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3 }}
+                            className="hero-title"
                             style={{
-                                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                                fontSize: 'clamp(1.75rem, 5vw, 3rem)',
                                 lineHeight: 1.2,
                                 marginBottom: '1rem',
                                 fontWeight: 700,
-                                whiteSpace: 'nowrap'
                             }}
                         >
                             Hi, I'm Marvin Chaudhary!
@@ -121,7 +158,7 @@ export default function Home() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5 }}
-                            style={{ fontSize: '1.2rem', color: 'var(--text-muted)', lineHeight: 1.5, maxWidth: '500px' }}
+                            style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', color: 'var(--text-muted)', lineHeight: 1.5, maxWidth: '500px', padding: '0 1rem' }}
                         >
                             I aspire to turn complex problems into simple, dependable software.
                         </motion.p>
@@ -152,12 +189,13 @@ export default function Home() {
                 >
                     <h2 style={{ marginBottom: '1.5rem', fontSize: '2rem' }}>Let's Connect</h2>
 
-                    <div style={{
+                    <div className="social-links-container" style={{
                         display: 'flex',
                         justifyContent: 'center',
-                        gap: '3.6rem', /* 1.2x of 3rem */
-                        flexWrap: 'wrap', // Responsive wrapping
-                        alignItems: 'flex-start' /* Align to top so texts line up */
+                        gap: '3rem',
+                        flexWrap: 'wrap',
+                        alignItems: 'flex-start',
+                        padding: '0 0.5rem'
                     }}>
                         <a href="https://linkedin.com/in/marvin-chaudhary" target="_blank" rel="noopener noreferrer" title="LinkedIn" className="social-link">
                             <img src="/linkedin.png" alt="LinkedIn" className="social-img" />

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-export default function PageWrapper({ children, className }) {
+export default function PageWrapper({ children, className, ...props }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -10,6 +10,7 @@ export default function PageWrapper({ children, className }) {
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             className={className}
+            {...props}
         >
             {children}
         </motion.div>

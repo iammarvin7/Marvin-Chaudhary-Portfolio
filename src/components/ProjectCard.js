@@ -25,12 +25,12 @@ export default function ProjectCard({ project, index }) {
 
                     {/* Header & Desc */}
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em' }}>{project.title}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', flex: 1 }}>
+                                <h3 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 700, letterSpacing: '-0.02em' }}>{project.title}</h3>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
                                 {project.link && (
                                     <a href={project.link} target="_blank" rel="noopener noreferrer"
                                         className="btn-icon"
@@ -85,9 +85,9 @@ export default function ProjectCard({ project, index }) {
                         </div>
 
                         <p style={{
-                            fontSize: '1.05rem',
+                            fontSize: 'clamp(0.9rem, 2vw, 1.05rem)',
                             color: 'var(--text-muted)',
-                            marginBottom: '2rem',
+                            marginBottom: '1.5rem',
                             lineHeight: 1.6,
                             fontFamily: 'var(--font-inter)'
                         }}>
@@ -123,10 +123,6 @@ export default function ProjectCard({ project, index }) {
                         justifyContent: 'center',
                         paddingLeft: '1rem',
                         borderLeft: '1px solid rgba(0,0,0,0.03)',
-                        // Hidden on mobile by default via media queries if we had CSS, checking window size in JS is safer or use standard class. Use standard class 'desktop-only' if exists? 
-                        // Let's use inline media query logic or simple responsive check? Next.js CSS modules or globals. 
-                        // I'll add a 'hidden-mobile' class in globals.css or just force it flex.
-                        // For now, let's keep it visible and rely on flex-wrap behaviour if screen is small.
                     }} className="project-preview-container">
                         <LinkPreview url={previewUrl} manualImage={project.previewImage} />
                     </div>

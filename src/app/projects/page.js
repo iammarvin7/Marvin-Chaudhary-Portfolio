@@ -9,8 +9,8 @@ export const metadata = {
 export default function Projects() {
     return (
         <PageWrapper className="container section">
-            <h1 style={{ marginBottom: '3rem' }}>Selected Work</h1>
-            <div className="grid-2">
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 {content.projects.map((project, index) => (
                     <ProjectCard key={index} project={project} index={index} />
                 ))}

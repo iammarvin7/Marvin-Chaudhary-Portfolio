@@ -164,11 +164,10 @@ a {
 
 /* Master Redesign Utilities */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  background: var(--surface-color);
+  /* Opaque background */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .card-master {
@@ -247,6 +246,197 @@ nav {
   display: flex;
   justify-content: center;
   padding-top: 1.5rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM
+   ========================================================================== */
+
+/* Responsive Grid Utilities */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Visibility Utilities */
+.mobile-only {
+  display: block;
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   MOBILE-FIRST RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* Small Mobile (up to 480px) */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+  }
+
+  .section {
+    padding: 3rem 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .card-master {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  /* Gallery grid gap */
+  .masonry-container {
+    gap: 1rem !important;
+  }
+}
+
+/* Mobile & Small Tablets (up to 768px) */
+@media (max-width: 768px) {
+
+  /* Ensure content doesn't overlap with hamburger menu */
+  main {
+    padding-top: 70px !important;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  .section {
+    padding: 3rem 0 4rem;
+  }
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .card-master {
+    padding: 1.75rem;
+    border-radius: 20px;
+  }
+
+  .card-master:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Navbar adjustments for mobile */
+  nav {
+    padding-top: 0;
+    justify-content: flex-start;
+  }
+
+  /* Resume PDF Container - Global to avoid styled-jsx issues with motion components */
+  .resume-pdf-container {
+    width: 100%;
+    height: 800px;
+    /* Mobile height */
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Resume dimensions for larger screens */
+@media (min-width: 769px) {
+  .resume-pdf-container {
+    width: 100%;
+    height: 1100px;
+    /* Desktop height */
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Tablets (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .section {
+    padding: 6rem 0;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+
+  /* Disable hover transforms on touch devices */
+  .card-master:hover {
+    transform: none;
+  }
+
+  /* Ensure touch targets are large enough */
+  .btn,
+  .tag,
+  .social-icon,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Make links/buttons easier to tap */
+  .btn {
+    padding: 0.9rem 1.6rem;
+  }
 }
 
 
@@ -410,6 +600,7 @@ nav {
   justify-content: center;
   align-items: center;
 }
+
 /* About Page Layout */
 .about-grid {
   display: grid;
@@ -436,7 +627,7 @@ nav {
 .photo-main {
   width: 80%;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   position: absolute;
   top: 0;
   right: 0;
@@ -448,12 +639,14 @@ nav {
 .photo-overlay {
   width: 60%;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   position: absolute;
-  bottom: 5%; /* Slight push up */
+  bottom: 5%;
+  /* Slight push up */
   left: 0;
   z-index: 2;
-  border: 4px solid #fcfcfc; /* Fallback or var */
+  border: 4px solid #fcfcfc;
+  /* Fallback or var */
   /* If var(--bg-color) works, use it, but safe to assume whitish bg */
   border-color: var(--bg-color, #ffffff);
   object-fit: cover;
@@ -463,7 +656,7 @@ nav {
 .about-photos-container:hover .photo-main {
   transform: scale(1.02) translateX(5px);
 }
+
 .about-photos-container:hover .photo-overlay {
   transform: scale(1.02) translateX(-5px);
 }
-

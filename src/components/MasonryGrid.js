@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
@@ -10,16 +11,8 @@ function getPhotoName(filename) {
 
 // Vibrant color palette (opaque, inspired by Amy Lombard's site)
 const VIBRANT_COLORS = [
-    '#E07B39', // Burnt Orange
-    '#4CAF50', // Green
-    '#9C27B0', // Purple
-    '#FF5722', // Deep Orange
-    '#2196F3', // Blue
-    '#FFEB3B', // Yellow
-    '#E91E63', // Pink
-    '#00BCD4', // Cyan
-    '#8BC34A', // Light Green
-    '#FF9800', // Orange
+    '#E07B39', '#4CAF50', '#9C27B0', '#FF5722', '#2196F3',
+    '#FFEB3B', '#E91E63', '#00BCD4', '#8BC34A', '#FF9800',
 ];
 
 function getColorForIndex(index) {
@@ -29,6 +22,7 @@ function getColorForIndex(index) {
 export default function MasonryGrid({ photos }) {
     const [columns, setColumns] = useState([]);
     const [hoveredPhoto, setHoveredPhoto] = useState(null);
+    const [gap, setGap] = useState('2rem');
 
     // Algorithm to distribute photos into columns
     useEffect(() => {
@@ -36,18 +30,27 @@ export default function MasonryGrid({ photos }) {
 
         const calculateColumns = () => {
             const width = window.innerWidth;
-            let numCols = 1;
+            let numCols = 2; // Default: 2 columns for mobile
 
-            // Reverted to 3 columns on desktop as requested
+            // 3 columns on desktop, 2 on tablet and mobile
             if (width >= 1024) numCols = 3;
-            else if (width >= 640) numCols = 2;
+            else numCols = 2;
+
+            // Smaller gap on mobile for tighter 2-column layout
+            setGap(width < 640 ? '0.75rem' : '2rem');
 
             // Initialize columns
             const newColumns = Array.from({ length: numCols }, () => []);
 
             // Distribution Algorithm: Round Robin
             photos.forEach((photo, index) => {
-                newColumns[index % numCols].push({ name: photo, originalIndex: index });
+                // Determine if this photo object is new structure or legacy string
+                // (It should be new structure from now on)
+                const photoData = typeof photo === 'string'
+                    ? { src: `/photos/${photo}`, name: photo, originalIndex: index }
+                    : { ...photo, originalIndex: index }; // Assume width/height/name/src are in object
+
+                newColumns[index % numCols].push(photoData);
             });
 
             setColumns(newColumns);
@@ -68,42 +71,53 @@ export default function MasonryGrid({ photos }) {
     }
 
     return (
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', gap: gap, alignItems: 'flex-start' }}>
             {columns.map((colPhotos, colIndex) => (
-                <div key={colIndex} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                <div key={colIndex} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: gap }}>
                     {colPhotos.map((photoData, photoIndex) => {
-                        const photo = photoData.name;
-                        const photoName = getPhotoName(photo);
-                        const isHovered = hoveredPhoto === photo;
+                        // Handle legacy vs new structure for safety
+                        const photoName = getPhotoName(photoData.name);
+                        const isHovered = hoveredPhoto === photoData.name;
                         const overlayColor = getColorForIndex(photoData.originalIndex);
+
+                        // Priority loading for top items (first 2 rows roughly)
+                        const isPriority = photoData.originalIndex < 6;
 
                         return (
                             <motion.div
-                                key={photo}
+                                key={photoData.name}
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: (colIndex * 0.1) + (photoIndex * 0.05), duration: 0.5, ease: "easeOut" }}
-                                onMouseEnter={() => setHoveredPhoto(photo)}
+                                onMouseEnter={() => setHoveredPhoto(photoData.name)}
                                 onMouseLeave={() => setHoveredPhoto(null)}
                                 style={{
                                     position: 'relative',
-                                    overflow: 'hidden',
                                     borderRadius: '4px',
                                     boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    // Removed overflow: hidden here to allow proper scaling if needed, 
+                                    // but usually safer to keep it for border-radius on images
+                                    overflow: 'hidden'
                                 }}
                             >
-                                <img
-                                    src={`/photos/${photo}`}
-                                    alt={photoName}
-                                    loading="lazy"
-                                    style={{
-                                        display: 'block',
-                                        width: '100%',
-                                        height: 'auto',
-                                        transition: 'transform 0.3s ease'
-                                    }}
-                                />
+                                <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
+                                    <Image
+                                        src={photoData.src}
+                                        alt={photoName}
+                                        width={photoData.width || 800} // Fallback if width missing
+                                        height={photoData.height || 600} // Fallback if height missing
+                                        priority={isPriority}
+                                        placeholder={photoData.blurDataURL ? "blur" : "empty"}
+                                        blurDataURL={photoData.blurDataURL}
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        style={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'block',
+                                        }}
+                                    />
+                                </div>
 
                                 {/* Hover Overlay - Full coverage, opaque vibrant color */}
                                 <motion.div
@@ -124,6 +138,7 @@ export default function MasonryGrid({ photos }) {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         pointerEvents: 'none',
+                                        zIndex: 10,
                                         boxShadow: '0 10px 40px rgba(0,0,0,0.2)' // Added shadow
                                     }}
                                 >
